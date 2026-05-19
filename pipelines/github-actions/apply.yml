@@ -18,10 +18,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
+      - name: Build Artifact Name
+        id: artifact_meta
+        run: echo "name=terraform-plan-$(echo '${{ github.event.inputs.stack_path }}' | tr '/' '-')" >> "$GITHUB_OUTPUT"
       - name: Download Plan Artifact
         uses: actions/download-artifact@v4
         with:
-          name: terraform-plan
+          name: ${{ steps.artifact_meta.outputs.name }}
           path: ${{ github.event.inputs.stack_path }}
       - name: Terraform Init
         run: terraform -chdir=${{ github.event.inputs.stack_path }} init
