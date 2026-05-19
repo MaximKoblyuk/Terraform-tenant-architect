@@ -1,0 +1,19 @@
+trigger: none
+
+stages:
+  - stage: Apply
+    jobs:
+      - job: ApplyInfra
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: '1.8.5'
+          - script: terraform init
+            workingDirectory: environments/prod/platform
+            displayName: terraform init
+          - script: terraform apply -auto-approve
+            workingDirectory: environments/prod/platform
+            displayName: terraform apply
