@@ -1,0 +1,21 @@
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+  - task: TerraformInstaller@1
+    inputs:
+      terraformVersion: '1.8.5'
+  - script: terraform fmt -check -recursive
+    displayName: terraform fmt
+  - script: terraform init -backend=false
+    workingDirectory: environments/dev/platform
+    displayName: terraform init
+  - script: terraform validate
+    workingDirectory: environments/dev/platform
+    displayName: terraform validate
+  - script: terraform plan -input=false
+    workingDirectory: environments/dev/platform
+    displayName: terraform plan

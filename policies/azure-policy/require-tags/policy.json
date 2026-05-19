@@ -1,0 +1,19 @@
+{
+  "properties": {
+    "displayName": "Require standard tags",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          { "field": "tags['Environment']", "exists": "false" },
+          { "field": "tags['Owner']", "exists": "false" },
+          { "field": "tags['CostCenter']", "exists": "false" }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}
