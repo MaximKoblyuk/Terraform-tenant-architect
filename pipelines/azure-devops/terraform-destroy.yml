@@ -4,7 +4,7 @@ stages:
   - stage: destroy
     jobs:
       - deployment: terraform_destroy
-        environment: prod-destroy
+        environment: dev-destroy
         strategy:
           runOnce:
             deploy:
