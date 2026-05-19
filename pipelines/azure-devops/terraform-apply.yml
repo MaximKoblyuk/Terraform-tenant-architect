@@ -4,7 +4,7 @@ stages:
   - stage: apply
     jobs:
       - deployment: terraform_apply
-        environment: prod
+        environment: dev
         strategy:
           runOnce:
             deploy:

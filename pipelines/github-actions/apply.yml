@@ -29,4 +29,4 @@ jobs:
       - name: Terraform Init
         run: terraform -chdir=${{ github.event.inputs.stack_path }} init
       - name: Terraform Apply Saved Plan
-        run: terraform -chdir=${{ github.event.inputs.stack_path }} apply tfplan
+        run: terraform -chdir=${{ github.event.inputs.stack_path }} apply -input=false tfplan
