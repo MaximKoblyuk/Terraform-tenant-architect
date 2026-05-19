@@ -1,3 +1,4 @@
 output "id" {
-  value = azurerm_virtual_network.this.id
+  description = "Resource ID of the virtual network."
+  value       = azurerm_virtual_network.this.id
 }

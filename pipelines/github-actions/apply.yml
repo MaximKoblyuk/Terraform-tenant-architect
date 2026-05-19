@@ -18,7 +18,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-plan
+          path: ${{ github.event.inputs.stack_path }}
       - name: Terraform Init
         run: terraform -chdir=${{ github.event.inputs.stack_path }} init
-      - name: Terraform Apply
-        run: terraform -chdir=${{ github.event.inputs.stack_path }} apply -auto-approve
+      - name: Terraform Apply Saved Plan
+        run: terraform -chdir=${{ github.event.inputs.stack_path }} apply tfplan

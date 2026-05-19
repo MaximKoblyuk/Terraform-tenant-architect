@@ -10,5 +10,7 @@ stages:
           - script: |
               terraform -chdir=environments/dev/platform init
               terraform -chdir=environments/dev/platform validate
-              terraform -chdir=environments/dev/platform plan
+              terraform -chdir=environments/dev/platform plan -out=tfplan
             displayName: Terraform validate and plan
+          - publish: environments/dev/platform/tfplan
+            artifact: terraform-plan

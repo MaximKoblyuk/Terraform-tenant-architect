@@ -2,4 +2,5 @@
 set -euo pipefail
 
 STACK_PATH="${1:-environments/dev/platform}"
-terraform -chdir="$STACK_PATH" plan -out=tfplan
+PLAN_FILE="${2:-tfplan}"
+terraform -chdir="$STACK_PATH" plan -out="$PLAN_FILE"

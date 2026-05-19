@@ -22,4 +22,9 @@ jobs:
       - name: Terraform Validate
         run: terraform -chdir=${{ github.event.inputs.stack_path }} validate
       - name: Terraform Plan
-        run: terraform -chdir=${{ github.event.inputs.stack_path }} plan
+        run: terraform -chdir=${{ github.event.inputs.stack_path }} plan -out=tfplan
+      - name: Upload Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: ${{ github.event.inputs.stack_path }}/tfplan

@@ -9,7 +9,9 @@ stages:
           runOnce:
             deploy:
               steps:
+                - download: current
+                  artifact: terraform-plan
                 - script: |
                     terraform -chdir=environments/dev/platform init
-                    terraform -chdir=environments/dev/platform apply -auto-approve
-                  displayName: Terraform apply
+                    terraform -chdir=environments/dev/platform apply tfplan
+                  displayName: Terraform apply saved plan
