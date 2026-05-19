@@ -1,0 +1,25 @@
+name: terraform-plan
+
+on:
+  workflow_dispatch:
+    inputs:
+      stack_path:
+        description: "Terraform stack path"
+        required: true
+        default: "environments/dev/platform"
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform Init
+        run: terraform -chdir=${{ github.event.inputs.stack_path }} init
+      - name: Terraform Validate
+        run: terraform -chdir=${{ github.event.inputs.stack_path }} validate
+      - name: Terraform Plan
+        run: terraform -chdir=${{ github.event.inputs.stack_path }} plan

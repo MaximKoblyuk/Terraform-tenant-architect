@@ -1,0 +1,24 @@
+name: terraform-apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      stack_path:
+        description: "Terraform stack path"
+        required: true
+        default: "environments/dev/platform"
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform Init
+        run: terraform -chdir=${{ github.event.inputs.stack_path }} init
+      - name: Terraform Apply
+        run: terraform -chdir=${{ github.event.inputs.stack_path }} apply -auto-approve

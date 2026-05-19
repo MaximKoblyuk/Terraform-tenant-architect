@@ -1,0 +1,14 @@
+trigger: none
+
+stages:
+  - stage: validate_and_plan
+    jobs:
+      - job: terraform_plan
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - script: |
+              terraform -chdir=environments/dev/platform init
+              terraform -chdir=environments/dev/platform validate
+              terraform -chdir=environments/dev/platform plan
+            displayName: Terraform validate and plan
