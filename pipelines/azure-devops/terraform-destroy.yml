@@ -11,6 +11,6 @@ steps:
   - script: terraform init
     workingDirectory: environments/dev/platform
     displayName: terraform init
-  - script: terraform destroy -auto-approve
+  - script: terraform destroy
     workingDirectory: environments/dev/platform
     displayName: terraform destroy

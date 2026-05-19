@@ -1,9 +1,9 @@
 trigger: none
 
 stages:
-  - stage: Apply
+  - stage: Plan
     jobs:
-      - job: ApplyInfra
+      - job: PlanInfra
         pool:
           vmImage: ubuntu-latest
         steps:
@@ -14,6 +14,36 @@ stages:
           - script: terraform init
             workingDirectory: environments/prod/platform
             displayName: terraform init
-          - script: terraform apply -auto-approve
+          - script: terraform plan -out=tfplan -input=false
             workingDirectory: environments/prod/platform
-            displayName: terraform apply
+            displayName: terraform plan
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: environments/prod/platform/tfplan
+              artifact: prod-tfplan
+
+  - stage: Apply
+    dependsOn: Plan
+    jobs:
+      - deployment: ApplyInfra
+        environment: prod
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+                - checkout: self
+                - task: TerraformInstaller@1
+                  inputs:
+                    terraformVersion: '1.8.5'
+                - task: DownloadPipelineArtifact@2
+                  inputs:
+                    artifactName: prod-tfplan
+                    targetPath: environments/prod/platform
+                - script: terraform init
+                  workingDirectory: environments/prod/platform
+                  displayName: terraform init
+                - script: terraform apply -input=false tfplan
+                  workingDirectory: environments/prod/platform
+                  displayName: terraform apply

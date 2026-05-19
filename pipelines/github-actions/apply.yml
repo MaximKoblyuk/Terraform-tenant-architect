@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  apply:
+  plan:
     runs-on: ubuntu-latest
     environment: prod
     permissions:
@@ -18,6 +18,35 @@ jobs:
       - name: Terraform init
         run: terraform init
         working-directory: environments/prod/platform
+      - name: Terraform plan
+        run: terraform plan -out=tfplan -input=false
+        working-directory: environments/prod/platform
+      - name: Upload tfplan
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-tfplan
+          path: environments/prod/platform/tfplan
+
+  apply:
+    runs-on: ubuntu-latest
+    environment: prod
+    needs: plan
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.5
+      - name: Download tfplan
+        uses: actions/download-artifact@v4
+        with:
+          name: prod-tfplan
+          path: environments/prod/platform
+      - name: Terraform init
+        run: terraform init
+        working-directory: environments/prod/platform
       - name: Terraform apply
-        run: terraform apply -auto-approve
+        run: terraform apply -input=false tfplan
         working-directory: environments/prod/platform
