@@ -1,8 +1,9 @@
 locals {
-  env = "dev"
+  env        = "dev"
+  region_key = "we"
 
   names = {
-    rg_platform   = "rg-dev-we-platform-001"
-    vnet_hub      = "vnet-dev-we-hub-001"
+    rg_platform = format("rg-%s-%s-platform-001", local.env, local.region_key)
+    vnet_hub    = format("vnet-%s-%s-hub-001", local.env, local.region_key)
   }
 }

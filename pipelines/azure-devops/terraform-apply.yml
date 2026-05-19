@@ -13,5 +13,5 @@ stages:
                   artifact: terraform-plan
                 - script: |
                     terraform -chdir=environments/dev/platform init
-                    terraform -chdir=environments/dev/platform apply tfplan
+                    terraform -chdir=environments/dev/platform apply -input=false "$(Pipeline.Workspace)/terraform-plan/tfplan"
                   displayName: Terraform apply saved plan
