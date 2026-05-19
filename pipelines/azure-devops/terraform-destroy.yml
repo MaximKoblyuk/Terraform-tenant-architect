@@ -11,6 +11,9 @@ steps:
   - script: terraform init
     workingDirectory: environments/dev/platform
     displayName: terraform init
-  - script: terraform destroy
+  - script: terraform plan -destroy -out=tfdestroy -input=false
     workingDirectory: environments/dev/platform
-    displayName: terraform destroy
+    displayName: terraform plan destroy
+  - script: terraform apply -input=false tfdestroy
+    workingDirectory: environments/dev/platform
+    displayName: terraform apply destroy plan
